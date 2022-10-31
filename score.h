@@ -23,15 +23,18 @@ inline void parse_score_record_str(const char* s, score* t) {
     s = next_field(s);
     char * p = t->name;
     while (*s != ',') { *(p++) = *(s++); }
+    --p;
     while (*p == ' ') { --p; }
-    *(p + 1) = '\0';
+    ++p;
+    *p = '\0';
 
     s = next_field(s);
     t->score = atou(s, 0);
 }
 
-inline void score_to_record_str(char* p, score* t) {
-    utoa(p, t->id);
+inline char * score_to_record_str(char* s, score* t) {
+    char* p = s;
+    p = utoa(p, t->id);
     while (*p != '\0') { ++p; }
     *(p++) = ',';
     
@@ -39,9 +42,9 @@ inline void score_to_record_str(char* p, score* t) {
     while (*q != '\0') { *(p++) = *(q++); }
     *(p++) = ',';
     
-    utoa(p, t->score);
+    p = utoa(p, t->score);
     while (*p != '\0') { ++p; }
-    *p = '\0';
+    return p;
 }
 
 #endif
