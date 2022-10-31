@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "utils.h"
 #include "score.h"
 
 #pragma comment (lib, "Ws2_32.lib")
@@ -84,18 +85,27 @@ int __cdecl main() {
     int iSendResult;
     int recvbuflen = DEFAULT_BUFLEN;
 
-    const char* szText = "TCP server connected!";
-    send(ClientSocket, szText, strlen(szText) + 1, 0);
+    const char* szText = "TCP server connected!\n";
+    send(ClientSocket, szText, strlen(szText), 0);
+
+    score t[10];
+    int cnt = 0;
 
     // Receive until the peer shuts down the connection
     do {
         iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
         if (iResult > 0) {
             printf("Bytes received: %d\n", iResult);
-            
-            recvbuf[iResult] = 0;
-            printf("-- %s\n", recvbuf);
+            char* s = recvbuf;
 
+            do {
+                parse_score_record_str(s, &t[cnt]);
+                printf("ID: %d; Name: %s; Score: %d\n", t[cnt].id, t[cnt].name, t[cnt].score);
+                cnt += 1;
+                while (*s != '\n') ++s;
+                ++s;
+            } while (s - recvbuf < iResult);
+            
             // Echo the buffer back to the sender
             iSendResult = send(ClientSocket, recvbuf, iResult, 0);
             if (iSendResult == SOCKET_ERROR) {
@@ -104,7 +114,10 @@ int __cdecl main() {
                 WSACleanup();
                 return 1;
             }
+            printf("Echoing received content...\n");
             printf("Bytes sent: %d\n", iSendResult);
+
+            if (cnt == sizeof(t) / sizeof(t[0])) break;
         } else if (iResult == 0) {
             printf("Connection closing...\n");
         } else {
@@ -128,6 +141,16 @@ int __cdecl main() {
     // cleanup
     closesocket(ClientSocket);
     WSACleanup();
+
+    // Write received data to CSV file
+    FILE* out = fopen("data.csv", "w");
+    
+    fprintf(out, "Id,Name,Score\n");
+    for (int i = 0; i < cnt; ++i) {
+        fprintf(out, "%d,%s,%d\n", t[i].id, t[i].name, t[i].score);
+    }
+
+    fclose(out);
 
     return 0;
 }
