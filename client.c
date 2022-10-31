@@ -84,7 +84,12 @@ int main() {
     for (int i = 0; i < sizeof(t) / sizeof(score); ++i) {
         // Struct need to be serialized before sent
         char* s = score_to_record_str(sendbuf, &t[p[i]]);
+
+        // Though we send one record at a time, the server may received
+        // several records together each time. So we mark each record
+        // string's end with '\n'.
         *s = '\n';
+
         iResult = send(ConnectSocket, sendbuf, s + 1 - sendbuf, 0);
 
         if (iResult == SOCKET_ERROR) {

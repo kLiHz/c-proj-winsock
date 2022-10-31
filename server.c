@@ -98,6 +98,7 @@ int __cdecl main() {
             printf("Bytes received: %d\n", iResult);
             char* s = recvbuf;
 
+            // The server may receive multiple records, each ended with a '\n'
             do {
                 parse_score_record_str(s, &t[cnt]);
                 printf("ID: %d; Name: %s; Score: %d\n", t[cnt].id, t[cnt].name, t[cnt].score);
