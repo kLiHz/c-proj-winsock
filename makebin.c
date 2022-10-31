@@ -4,25 +4,6 @@
 
 #include "score.h"
 
-unsigned int atou(const char * s, unsigned int u) {
-    if (*s < '0' || *s > '9') {
-        return u;
-    } else {
-        return atou(s + 1, (*s - '0') + u * 10);
-    }
-}
-
-void parse(const char* s, score* t) {
-    char * p = t->name;
-    t->id = atou(s, 0);
-    while (*s != ',') { ++s; }
-    ++s;
-    while (*s != ',') { *(p++) = *(s++); }
-    ++s;
-    *p = 0;
-    t->score = atou(s, 0);
-}
-
 int main() {
     score t[10];
 
@@ -42,7 +23,7 @@ int main() {
         }
         buf[k] = '\0';
 
-        parse(buf, &t[i]);
+        parse_score_record_str(buf, &t[i]);
         printf("%d, %s, %d\n", t[i].id, t[i].name, t[i].score);
     }
 
