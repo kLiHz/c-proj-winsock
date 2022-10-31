@@ -9,3 +9,6 @@ out/
 
 # Build Dirs
 *build*/
+
+data.bin
+data.csv
