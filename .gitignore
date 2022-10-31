@@ -5,6 +5,7 @@ out/
 
 # Visual Studio Code
 .vscode/
+.cache/clangd/
 
 # Build Dirs
 *build*/
