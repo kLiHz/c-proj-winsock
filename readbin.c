@@ -13,7 +13,7 @@ int main() {
     fread(t, sizeof(t), 1, fp);
     fclose(fp);
 
-    printf("Name,ID,Score\n");
+    printf("ID,Name,Score\n");
     
     for (int i = 0; i < 10; ++i) { p[i] = i; }
 
