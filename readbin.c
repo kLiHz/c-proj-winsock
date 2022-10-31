@@ -15,8 +15,9 @@ int main() {
 
     printf("Name,ID,Score\n");
     
+    for (int i = 0; i < 10; ++i) { p[i] = i; }
+
     for (int i = 0; i < 10; ++i) {
-        p[i] = i;
         printf("%d, %s, %d\n", t[i].id, t[i].name, t[i].score);
     }
 

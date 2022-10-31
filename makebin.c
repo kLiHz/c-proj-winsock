@@ -45,6 +45,8 @@ int main() {
         parse(buf, &t[i]);
         printf("%d, %s, %d\n", t[i].id, t[i].name, t[i].score);
     }
+
+    // Dump to binary file
     fwrite(t, sizeof(score), 10, out);
     
     fclose(in);
